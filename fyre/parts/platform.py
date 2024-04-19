@@ -51,7 +51,7 @@ class Platform:
         """
         for firewall in self.firewalls:
             if firewall.is_component_within_firewall(component):
-                return True
+                return firewall
         return False
 
     def get_server_by_ip(self, ip: str):

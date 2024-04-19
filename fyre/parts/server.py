@@ -32,7 +32,7 @@ class FyreServer(FyreComponent):
 
         # Adding a label to display IP address on the server's component UI
         label = tk.Label(text=f'IP: {self.ip} | Status: {self.status}', master=self.parent_ui_component.frame)
-        self.parent_ui_component.add_ui_component(label, drags_component=True)
+        self.parent_ui_component.add_ui_component(label, drags_component=True, min_width=200)
 
         self.platform.register_server(self)
 
@@ -46,6 +46,6 @@ class FyreServer(FyreComponent):
             service = FyreService(self, service_name, port)
             service.start()
             self.services[service_name] = service
-            self.parent_ui_component.add_ui_component(
-                tk.Label(text=f"Service: {service_name} | Port: {port} | Status: {service.status}",
-                         master=self.parent_ui_component.frame), drags_component=True)
+            # self.parent_ui_component.add_ui_component(
+            #     tk.Label(text=f"Service: {service_name} | Port: {port} | Status: {service.status}",
+            #              master=self.parent_ui_component.frame), drags_component=True)

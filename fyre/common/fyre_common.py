@@ -1,7 +1,6 @@
 import random
 
 from scapy.layers.inet import TCP, IP
-from scapy.layers.l2 import Ether
 from scapy.packet import Raw
 
 
@@ -26,10 +25,11 @@ class FyreComponent:
             raise ValueError(f"Destination IP {ip} not found.")
 
     def receive_packet(self, packet):
-        if self.platform.determine_if_component_is_within_firewall(self):
-            self.process_packet(packet)
+        firewall = self.platform.determine_if_component_is_within_firewall(self)
+        if firewall:
+            firewall.process_packet(packet)
         else:
-            print(f"Packet received by {self}!")
+            self.process_packet(packet)
 
     def process_packet(self, packet):
-        print(f"Packet processed by {self}, I'm behind a firewall!")
+        print(f"Packet processed by {self}: {packet.summary()}")

@@ -14,10 +14,10 @@ class FyreClient(FyreComponent):
         self.dialogue = None
 
         label = tk.Label(text=f'{self.ip}', master=self.parent_ui_component.frame)
-        self.parent_ui_component.add_ui_component(label, drags_component=True)
+        self.parent_ui_component.add_ui_component(label, drags_component=True, min_width=175)
 
         button = tk.Button(text="Manage", master=self.parent_ui_component.frame, command=self.handle_dialogue_on_click)
-        self.parent_ui_component.add_ui_component(button, drags_component=False)
+        self.parent_ui_component.add_ui_component(button, drags_component=False, min_width=175)
 
         self.platform.register_client(self)
 

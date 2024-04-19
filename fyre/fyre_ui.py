@@ -30,10 +30,13 @@ class FyreUIComponent:
 
     def __init__(self, frame: Frame):
         self.frame = frame
+        frame.grid_propagate(False)
 
-    def add_ui_component(self, ui_component, drags_component: bool = True):
+    def add_ui_component(self, ui_component, drags_component: bool = True, min_width: int = 0, min_height: int = 0):
         """
         Adds a UI component to the frame of this component.
+        :param min_height:          The minimum height of the frame
+        :param min_width:           The minimum width of the frame
         :param ui_component:        The tkinter UI component to add
         :param drags_component:     True if the component should be draggable, False otherwise
         """
@@ -44,18 +47,18 @@ class FyreUIComponent:
         if drags_component:
             ui_component.bind('<B1-Motion>', lambda event: handle_drag(self.frame, event))
         self.ui_components.append(ui_component)
-        self.frame.after_idle(self.resize_frame_by_ui_components)
+        self.frame.after_idle(lambda: self.resize_frame_by_ui_components(min_width, min_height))
         return ui_component
 
-    def resize_frame_by_ui_components(self):
+    def resize_frame_by_ui_components(self, min_width: int, min_height: int):
         """
         Resizes the frame to fit all of the UI components that have been added to it.
         """
         width = max([component.winfo_width() for component in self.ui_components])
         height = sum([component.winfo_height() for component in self.ui_components])
-        self.frame.config(width=width, height=height)
+        self.frame.config(width=max(width, min_width), height=max(height, min_height))
 
-    def is_inside(self, other) -> bool:
+    def has_component(self, other) -> bool:
         """
         Checks if the frame of this component is inside the frame of another component.
         :param other:   The other component to check against
