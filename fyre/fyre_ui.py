@@ -1,4 +1,5 @@
 import tkinter as tk
+import random as r
 
 from tkinter import Frame
 from typing import List
@@ -105,21 +106,50 @@ def create_interface_components(win: tk.Tk, canvas: tk.Canvas, platform):
     :param platform:    the platform object to register components with
     :return:
     """
+    def get_random_coordinates(width, height):
+        x, y = r.randint(0, WIN_WIDTH), r.randint(0, WIN_HEIGHT)
+        # Ensure the component is within the window
+        if x + width > WIN_WIDTH:
+            x -= width
+        if y + height > WIN_HEIGHT:
+            y -= height
+        return x, y
 
-    client_frame = tk.LabelFrame(win, text="Client", width=120, height=60, borderwidth=2, relief='solid', border=2)
-    client_fyre_component = make_draggable_fyre_component(client_frame, 100, 100)
-    fyre_client = FyreClient(platform, canvas, client_fyre_component, 'Client')
+    def create_client_component():
+        x, y = get_random_coordinates(120, 60)
+        client_frame = tk.LabelFrame(win, text="Client", width=120, height=60, borderwidth=2, relief='solid', border=2)
+        client_fyre_component = make_draggable_fyre_component(client_frame, x, y)
+        client_frame.lift()
+        return FyreClient(platform, canvas, client_fyre_component, f'Client {r.randint(0, 100000)}')
 
-    server_frame = tk.LabelFrame(win, text="Server", width=120, height=60, borderwidth=2, relief='solid', border=2)
-    server_fyre_component = make_draggable_fyre_component(server_frame, 500, 100)
-    fyre_server = FyreServer(platform, canvas, server_fyre_component, 'Server')
+    def create_server_component():
+        x, y = get_random_coordinates(120, 60)
+        server_frame = tk.LabelFrame(win, text="Server", width=120, height=60, borderwidth=2, relief='solid', border=2)
+        server_fyre_component = make_draggable_fyre_component(server_frame, x, y)
+        server_frame.lift()
+        return FyreServer(platform, canvas, server_fyre_component, 'Server')
 
-    firewall_frame = tk.LabelFrame(win, text="Firewall", width=250, height=250, borderwidth=2, relief='solid', border=2)
-    firewall_fyre_component = make_draggable_fyre_component(firewall_frame, 300, 300)
-    fyre_wall = Fyrewall(platform, canvas, firewall_fyre_component, 'Firewall')
+    def create_firewall_component():
+        x, y = get_random_coordinates(250, 250)
+        firewall_frame = tk.LabelFrame(win, text="Firewall", width=250, height=250, borderwidth=2, relief='solid', border=2)
+        firewall_fyre_component = make_draggable_fyre_component(firewall_frame, x, y)
+        firewall_frame.tkraise(canvas)
+        return Fyrewall(platform, canvas, firewall_fyre_component, 'Firewall')
 
-    server_frame.lift()
-    client_frame.lift()
+    # Create a top-level menu for adding components
+    menu = tk.Menu(win)
+    win.config(menu=menu)
+
+    # Create a menu for adding components
+    add_menu = tk.Menu(menu)
+    menu.add_cascade(label="Add", menu=add_menu)
+    add_menu.add_command(label="Client", command=lambda: create_client_component())
+    add_menu.add_command(label="Server", command=lambda: create_server_component())
+    add_menu.add_command(label="Firewall", command=lambda: create_firewall_component())
+
+    create_firewall_component()
+    create_client_component()
+    create_server_component()
 
 
 def create_interface(platform) -> tk.Tk:

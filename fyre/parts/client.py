@@ -36,12 +36,15 @@ class FyreClient(FyreComponent):
         self.dialogue.geometry(f'{500}x{250}+{x}+{y}')
         self.dialogue.deiconify()
 
+        server = self.platform.servers[0]
+
         # Add a label and text input to the dialogue for the "curl" command
         label = tk.Label(self.dialogue, text="Curl To:")
         label.grid(row=0, column=0, padx=10, pady=10)
         text_input = tk.Entry(self.dialogue, )
+        text_input.insert(0, server.ip)
         text_input.grid(row=0, column=1, padx=10, pady=10)
-        button = tk.Button(self.dialogue, text="Submit", command=lambda: self.handle_curl(text_input.get()))
+        button = tk.Button(self.dialogue, text="Submit", command=lambda: self.send_packet(text_input.get(), 80, 90, "Hello, World!",))
         button.grid(row=0, column=2, padx=10, pady=10)
 
         self.dialogue.mainloop()
