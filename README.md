@@ -13,12 +13,8 @@ The main objective of this project is to create a tool that allows users to crea
 - Scapy for packet manipulation
 - Visualization of firewall rules and policies using tkinter
 
-## Installation and Setup
-
 ## Usage
-
-## Testing
-To run the tests, run the following command: `python -m unittest discover tests`
+To run the program, run the following command: `python main.py`
 
 ## License
 This project is licensed under the MIT License. Feel free to use, modify, and distribute this code as you see fit. 
