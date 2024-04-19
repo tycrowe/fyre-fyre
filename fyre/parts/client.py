@@ -21,21 +21,6 @@ class FyreClient(FyreComponent):
 
         self.platform.register_client(self)
 
-    def handle_curl(self, ip: str):
-        """
-        Handles the "curl" command by sending a request to the server.
-        :param ip:  The IP address of the server to send the request to
-        """
-        type_hint, obj = self.platform.get_fyre_component_by_ip(ip)
-        if obj:
-            is_behind_firewall = self.platform.determine_if_component_is_within_firewall(obj)
-            if type_hint == "server":
-                print(f"Sending curl request to server with IP address {ip}: {'Blocked' if is_behind_firewall else 'Allowed'}.")
-            elif type_hint == "client":
-                print(f"Sending curl request to client with IP address {ip} : {'Blocked' if is_behind_firewall else 'Allowed'}.")
-        else:
-            print(f"Server with IP address {ip} not found.")
-
     def handle_dialogue_on_click(self):
         """
         Handles the dialogue when the client is clicked.
