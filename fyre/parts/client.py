@@ -1,12 +1,12 @@
 import tkinter as tk
 
-from fyre.common.fyre_common import FyreComponent
+from fyre.common.fyre_common import FyreComponent, generate_ip_address
 
 
 class FyreClient(FyreComponent):
     dialogue = None
 
-    def __init__(self, platform, component, canvas, name: str, ip: str = None):
+    def __init__(self, platform, canvas, component, name: str, ip: str = None):
         super().__init__(platform, component)
         self.canvas = canvas
         self.component = component
@@ -19,6 +19,8 @@ class FyreClient(FyreComponent):
 
         button = tk.Button(text="Manage", master=self.component.frame, command=self.handle_dialogue_on_click)
         self.component.add_ui_component(button, drags_component=False)
+
+        self.platform.register_client(self)
 
     def handle_curl(self, ip: str):
         """

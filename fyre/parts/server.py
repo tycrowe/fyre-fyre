@@ -1,10 +1,10 @@
 import tkinter as tk
 
-from fyre import FyreComponent, generate_ip_address
+from fyre.common.fyre_common import FyreComponent, generate_ip_address
 
 
 class FyreServer(FyreComponent):
-    def __init__(self, platform, component, canvas, name: str, ip: str = None):
+    def __init__(self, platform, canvas, component, name: str, ip: str = None):
         super().__init__(platform, component)
         self.canvas = canvas
         self.component = component
@@ -16,3 +16,5 @@ class FyreServer(FyreComponent):
 
         label = tk.Label(text=f'{self.ip}', master=self.component.frame)
         self.component.add_ui_component(label, drags_component=True)
+
+        self.platform.register_server(self)
