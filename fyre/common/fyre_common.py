@@ -9,4 +9,3 @@ class FyreComponent:
     def __init__(self, platform, parent_ui_component):
         self.platform = platform
         self.parent_ui_component = parent_ui_component
-

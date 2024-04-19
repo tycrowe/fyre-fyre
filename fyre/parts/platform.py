@@ -6,6 +6,7 @@ class Platform:
         self.addresses: List[str] = []
         self.clients = []
         self.servers = []
+        self.firewalls = []
 
     def register_client(self, client):
         """
@@ -32,6 +33,26 @@ class Platform:
                 self.servers.append(server)
                 return True
             raise ValueError(f"IP address {server.ip} already exists.")
+
+    def register_firewall(self, firewall):
+        """
+        Registers a firewall with the fyrefyre program.
+        :param firewall: the firewall to register
+        """
+        from fyre.parts.firewall import Fyrewall
+        if isinstance(firewall, Fyrewall):
+            self.firewalls.append(firewall)
+            return True
+
+    def determine_if_component_is_within_firewall(self, component):
+        """
+        Determines if a fyre component is within a firewall.
+        :param component: the fyre component to check
+        """
+        for firewall in self.firewalls:
+            if firewall.is_component_within_firewall(component):
+                return True
+        return False
 
     def get_server_by_ip(self, ip: str):
         """
@@ -67,8 +88,8 @@ class Platform:
         from fyre.parts.server import FyreServer
         for client in self.clients:
             if isinstance(client, FyreClient) and client.ip == ip:
-                return client.component
+                return 'client', client
         for server in self.servers:
             if isinstance(server, FyreServer) and server.ip == ip:
-                return server.component
+                return 'server', server
         raise ValueError(f"Fyre component with IP address {ip} not found.")

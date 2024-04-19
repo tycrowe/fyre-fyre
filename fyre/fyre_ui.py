@@ -5,6 +5,7 @@ from typing import List
 
 from fyre.parts.client import FyreClient
 from fyre.parts.server import FyreServer
+from fyre.parts.firewall import Fyrewall
 
 WIN_WIDTH = 800
 WIN_HEIGHT = 600
@@ -53,17 +54,21 @@ class FyreUIComponent:
         height = sum([component.winfo_height() for component in self.ui_components])
         self.frame.config(width=width, height=height)
 
-    def is_frame_inside(self, other) -> bool:
+    def is_inside(self, other) -> bool:
         """
         Checks if the frame of this component is inside the frame of another component.
         :param other:   The other component to check against
         :return:        True if this component is inside the other component, False otherwise
         """
-        x0, y0 = self.frame.winfo_x(), self.frame.winfo_y()
-        x1, y1 = x0 + self.frame.winfo_width(), y0 + self.frame.winfo_height()
-        x2, y2 = other.frame.winfo_x(), other.frame.winfo_y()
-        x3, y3 = x2 + other.frame.winfo_width(), y2 + other.frame.winfo_height()
-        return x0 >= x2 and y0 >= y2 and x1 <= x3 and y1 <= y3
+        current_x_pos, current_y_pos = self.frame.winfo_x(), self.frame.winfo_y()
+        other_x_pos, other_y_pos = other.frame.winfo_x(), other.frame.winfo_y()
+
+        current_width, current_height = self.frame.winfo_width(), self.frame.winfo_height()
+        other_width, other_height = other.frame.winfo_width(), other.frame.winfo_height()
+
+        # Now, we want to return if the other component is inside the current component
+        return current_x_pos <= other_x_pos and current_y_pos <= other_y_pos and \
+               current_x_pos + current_width >= other_x_pos + other_width and current_y_pos + current_height >= other_y_pos + other_height
 
     def draw_line_from_center(self, canvas, other):
         """
@@ -111,6 +116,7 @@ def create_interface_components(win: tk.Tk, canvas: tk.Canvas, platform):
 
     firewall_frame = tk.LabelFrame(win, text="Firewall", width=250, height=250, borderwidth=2, relief='solid', border=2)
     firewall_fyre_component = make_draggable_fyre_component(firewall_frame, 300, 300)
+    fyre_wall = Fyrewall(platform, canvas, firewall_fyre_component, 'Firewall')
 
     server_frame.lift()
     client_frame.lift()
